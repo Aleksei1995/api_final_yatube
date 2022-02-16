@@ -21,8 +21,8 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to='posts/', null=True, blank=True)
     group = models.ForeignKey(
-        Group, on_delete=models.CASCADE,
-        related_name="posts", blank=True, null=True
+        Group, blank=True, null=True,
+        on_delete=models.SET_NULL, related_name='posts'
     )
 
     def __str__(self):
@@ -38,6 +38,9 @@ class Comment(models.Model):
     created = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True)
 
+    def __str__(self):
+        return self.text
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
@@ -50,3 +53,11 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name='following'
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'following'],
+                                    name='user_following'),
+            models.CheckConstraint(check=~models.Q(user=models.F('following')),
+                                   name='user_not_following')
+        ]
