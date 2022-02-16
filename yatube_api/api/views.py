@@ -41,8 +41,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class MyViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, 
+class MyViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                 viewsets.GenericViewSet):
+
     pass
 
 
